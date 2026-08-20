@@ -28,6 +28,13 @@ export default {
     apiKey: required('WAHA_API_KEY'),
   },
 
+  // Core WAHA tự build. Bỏ trống WAHA_NEW_BASE_URL là tắt hẳn: mọi session hỏi
+  // core cũ, đúng như trước khi có định tuyến hai core.
+  wahaNew: {
+    baseUrl: process.env.WAHA_NEW_BASE_URL || '',
+    apiKey: process.env.WAHA_NEW_API_KEY || '',
+  },
+
   azure: {
     blobUrl: required('AZURE_BLOB_URL'),
     sasToken: required('AZURE_SAS_TOKEN'),
