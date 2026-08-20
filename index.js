@@ -6,6 +6,7 @@ import * as stats from './lib/stats.js';
 import * as telegram from './lib/telegram.js';
 import * as watchdog from './lib/watchdog.js';
 import * as sessionHealth from './lib/sessionHealth.js';
+import * as throughput from './lib/throughput.js';
 import webhookRoutes from './routes/webhook.js';
 import statsRoutes from './routes/stats.js';
 
@@ -31,6 +32,9 @@ const start = async () => {
     sessionHealth.sweepDisconnected().catch(() => {});
   }, 60_000).unref();
 
+  // Bắt session "WORKING giả": WAHA báo chạy nhưng websocket gows đã đứt.
+  throughput.start();
+
   const server = app.listen(config.port, () => {
     log.ok(`Webhook server chạy ở cổng ${config.port}`);
   });
@@ -44,6 +48,7 @@ const start = async () => {
   const shutdown = async (signal) => {
     log.info(`Nhận ${signal}, đang tắt...`);
     watchdog.stop();
+    throughput.stop();
     server.close();
     try { await redis.client.quit(); } catch { /* bỏ qua */ }
     process.exit(0);
