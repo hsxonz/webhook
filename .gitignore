@@ -6,3 +6,5 @@ npm-debug.log
 /logs
 *.bak
 *.bak2
+backups/
+*.bak-*
